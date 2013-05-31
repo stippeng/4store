@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:osnp="http://spatial.ucd.ie/lod/osn/property/"
+    xmlns:osn="http://spatial.ucd.ie/lod/osn/"
+    xmlns:osnt="http://spatial.ucd.ie/lod/osn/term/"
+    xmlns:wn="http://www.w3.org/2006/03/wn/wn20/instances/"
+    xmlns:wns="http://www.w3.org/2006/03/wn/wn20/schema/"
+  xml:base="http://spatial.ucd.ie/lod/osn/" > 
+  <rdf:Description rdf:about="http://spatial.ucd.ie/lod/osn/term/k:health_specialty:transplant_surgery/v:any">
+    <skos:relatedMatch rdf:resource="http://www.w3.org/2006/03/wn/wn20/instances/synset-electric_organ-noun-1"/>
+    <skos:relatedMatch rdf:resource="http://dbpedia.org/resource/Organ_transplant"/>
+    <skos:relatedMatch rdf:resource="http://www.w3.org/2006/03/wn/wn20/instances/synset-partial-adjective-2"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://spatial.ucd.ie/lod/osn/term/k:comment">
+    <skos:relatedMatch rdf:resource="http://www.w3.org/2006/03/wn/wn20/instances/synset-bus-noun-1"/>
+    <skos:relatedMatch rdf:resource="http://www.w3.org/2006/03/wn/wn20/instances/synset-plotter-noun-2"/>
+    <skos:relatedMatch rdf:resource="http://www.w3.org/2006/03/wn/wn20/instances/synset-stop-noun-5"/>
+    <skos:relatedMatch rdf:resource="http://www.w3.org/2006/03/wn/wn20/instances/synset-way-noun-6"/>
+    <skos:relatedMatch rdf:resource="http://www.w3.org/2006/03/wn/wn20/instances/synset-bus_stop-noun-1"/>
+  </rdf:Description>
+</rdf:RDF>

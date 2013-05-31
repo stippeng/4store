@@ -99,10 +99,10 @@ static int buffer_res(fsp_link *link, const int segments, fs_rid r, char *lex, f
     int seg = FS_RID_SEGMENT(r, segments);
 
     if (FS_IS_BNODE(r)) {
-	return 1;
+        return 1;
     }
     if (nodecache[r & CACHE_MASK] == r) {
-	return 1;
+        return 1;
     }
     if (!lex) {
         return 1;
@@ -111,24 +111,24 @@ static int buffer_res(fsp_link *link, const int segments, fs_rid r, char *lex, f
     res_buffer[seg][res_pos[seg]].rid = r;
     res_buffer[seg][res_pos[seg]].attr = attr;
     if (strlen(lex) < RES_BUF_SIZE) {
-	strcpy(lex_tmp[seg][res_pos[seg]], lex);
-	res_buffer[seg][res_pos[seg]].lex = lex_tmp[seg][res_pos[seg]];
+        strcpy(lex_tmp[seg][res_pos[seg]], lex);
+        res_buffer[seg][res_pos[seg]].lex = lex_tmp[seg][res_pos[seg]];
     } else {
-	res_buffer[seg][res_pos[seg]].lex = g_strdup(lex);
+        res_buffer[seg][res_pos[seg]].lex = g_strdup(lex);
     }
     if (++res_pos[seg] == RES_BUF_SIZE) {
-	if (!(dryrun & FS_DRYRUN_RESOURCES) &&
+        if (!(dryrun & FS_DRYRUN_RESOURCES) &&
                 fsp_res_import(link, seg, res_pos[seg], res_buffer[seg])) {
-	    fs_error(LOG_ERR, "resource import failed");
-	    return 1;
-	}
-	for (int i=0; i<res_pos[seg]; i++) {
-	    if (res_buffer[seg][i].lex != lex_tmp[seg][i]) {
-		free(res_buffer[seg][i].lex);
-		res_buffer[seg][i].lex = NULL;
-	    }
-	}
-	res_pos[seg] = 0;
+            fs_error(LOG_ERR, "resource import failed");
+            return 1;
+        }
+        for (int i=0; i<res_pos[seg]; i++) {
+            if (res_buffer[seg][i].lex != lex_tmp[seg][i]) {
+                free(res_buffer[seg][i].lex);
+                res_buffer[seg][i].lex = NULL;
+            }
+        }
+        res_pos[seg] = 0;
     }
 
     return 0;
@@ -222,7 +222,7 @@ int fs_import_stream_start(fsp_link *link, const char *model_uri, const char *mi
     }
 
     parse_data.muri = raptor_new_uri(parse_data.world,
-         (unsigned char *)model_uri);
+                                     (unsigned char *)model_uri);
 
     parse_data.model = g_strdup(model_uri);
     parse_data.model_hash = fs_hash_uri(model_uri);
@@ -291,7 +291,7 @@ int fs_import_stream_finish(fsp_link *link, int *count, int *errors)
     /* make sure buffers are flushed */
     for (int seg = 0; seg < segments; seg++) {
         if (res_pos[seg] > 0 && fsp_res_import(link, seg, res_pos[seg], res_buffer[seg])) {
-	    fs_error(LOG_ERR, "resource import failed");
+            fs_error(LOG_ERR, "resource import failed");
             return 1;
         }
     }
@@ -331,7 +331,7 @@ int fs_import_stream_finish(fsp_link *link, int *count, int *errors)
 
 
 int fs_import(fsp_link *link, const char *model_uri, char *resource_uri,
-	      const char *format, int verbosity, int dryrun, int has_o_index,
+              const char *format, int verbosity, int dryrun, int has_o_index,
               FILE *msg, int *count)
 {
     raptor_parser *rdf_parser = NULL;
@@ -389,6 +389,7 @@ int fs_import(fsp_link *link, const char *model_uri, char *resource_uri,
         return 1;
     }
 
+
     raptor_parser_set_statement_handler(rdf_parser, &parse_data, store_stmt);
     raptor_parser_set_graph_mark_handler(rdf_parser, &parse_data, graph_handler);
     ruri = raptor_new_uri(parse_data.world, (unsigned char *) resource_uri);
@@ -436,23 +437,23 @@ int fs_import_commit(fsp_link *link, int verbosity, int dryrun, int has_o_index,
 
     /* make sure buffers are flushed */
     for (int seg = 0; seg < segments; seg++) {
-	if (!(dryrun & FS_DRYRUN_RESOURCES) && res_pos[seg] > 0 && fsp_res_import(link, seg, res_pos[seg], res_buffer[seg])) {
-	    fs_error(LOG_ERR, "resource import failed");
+        if (!(dryrun & FS_DRYRUN_RESOURCES) && res_pos[seg] > 0 && fsp_res_import(link, seg, res_pos[seg], res_buffer[seg])) {
+            fs_error(LOG_ERR, "resource import failed");
 
-	    return 1;
-	}
+            return 1;
+        }
     }
     if (!(dryrun & FS_DRYRUN_RESOURCES) && fsp_res_import_commit_all(link)) {
         fs_error(LOG_ERR, "resource commit failed");
         return 2;
     }
     for (int seg = 0; seg < segments; seg++) {
-	for (int i=0; i<res_pos[seg]; i++) {
-	    if (res_buffer[seg][i].lex != lex_tmp[seg][i]) {
-		free(res_buffer[seg][i].lex);
-	    }
-	}
-	res_pos[seg] = 0;
+        for (int i=0; i<res_pos[seg]; i++) {
+            if (res_buffer[seg][i].lex != lex_tmp[seg][i]) {
+                free(res_buffer[seg][i].lex);
+            }
+        }
+        res_pos[seg] = 0;
     }
 
     if (!(dryrun & FS_DRYRUN_QUADS) && fsp_quad_import_commit_all(link, FS_BIND_BY_SUBJECT)) {
@@ -461,10 +462,10 @@ int fs_import_commit(fsp_link *link, int verbosity, int dryrun, int has_o_index,
     }
 
     for (int i=0; i<segments; i++) {
-	for (int j=0; j<RES_BUF_SIZE; j++) {
-	    free(lex_tmp[i][j]);
+        for (int j=0; j<RES_BUF_SIZE; j++) {
+            free(lex_tmp[i][j]);
             lex_tmp[i][j] = NULL;
-	}
+        }
     }
 
     if (parse_data.world) {
@@ -493,46 +494,46 @@ static int process_quads(fs_parse_stuff *data)
         return -1;
     }
     do {
-	ret = read(tfd, quad_buf, sizeof(quad_buf));
-	int count = ret / (sizeof(fs_rid) * 4);
-	if (ret < 0) {
-	    fs_error(LOG_ERR, "error reading triple buffer file (fd %d): %s", tfd, strerror(errno));
-	    return -1;
-	}
-	if (ret % sizeof(fs_rid) * 4 != 0) {
-	    fs_error(LOG_ERR, "bad read size, %d - not multiple of 4 RIDs", ret);
-	    return -1;
-	}
-	total += count;
-	for (int seg=0; seg < segments; seg++) {
-	    int i=0, scnt = 0;
-	    for (i=0; i<count; i++) {
-		if (FS_RID_SEGMENT(quad_buf[i][1], segments) == seg) {
-		    quad_buf_s[scnt][0] = quad_buf[i][0];
-		    quad_buf_s[scnt][1] = quad_buf[i][1];
-		    quad_buf_s[scnt][2] = quad_buf[i][2];
-		    quad_buf_s[scnt][3] = quad_buf[i][3];
-		    scnt++;
-		}
+        ret = read(tfd, quad_buf, sizeof(quad_buf));
+        int count = ret / (sizeof(fs_rid) * 4);
+        if (ret < 0) {
+            fs_error(LOG_ERR, "error reading triple buffer file (fd %d): %s", tfd, strerror(errno));
+            return -1;
+        }
+        if (ret % sizeof(fs_rid) * 4 != 0) {
+            fs_error(LOG_ERR, "bad read size, %d - not multiple of 4 RIDs", ret);
+            return -1;
+        }
+        total += count;
+        for (int seg=0; seg < segments; seg++) {
+            int i=0, scnt = 0;
+            for (i=0; i<count; i++) {
+                if (FS_RID_SEGMENT(quad_buf[i][1], segments) == seg) {
+                    quad_buf_s[scnt][0] = quad_buf[i][0];
+                    quad_buf_s[scnt][1] = quad_buf[i][1];
+                    quad_buf_s[scnt][2] = quad_buf[i][2];
+                    quad_buf_s[scnt][3] = quad_buf[i][3];
+                    scnt++;
+                }
             }
-	    if (!(dryrun & FS_DRYRUN_QUADS) && scnt > 0 && fsp_quad_import(link, seg, FS_BIND_BY_SUBJECT, scnt, quad_buf_s)) {
-		fs_error(LOG_ERR, "quad import failed");
+            if (!(dryrun & FS_DRYRUN_QUADS) && scnt > 0 && fsp_quad_import(link, seg, FS_BIND_BY_SUBJECT, scnt, quad_buf_s)) {
+                fs_error(LOG_ERR, "quad import failed");
 
-		return 1;
-	    }
-	}
-	if (verbosity) printf("Pass 2, processed %d triples\r", total);
-	fflush(stdout);
+                return 1;
+            }
+        }
+        if (verbosity) printf("Pass 2, processed %d triples\r", total);
+        fflush(stdout);
     } while (ret == sizeof(quad_buf));
     if (verbosity) {
         gettimeofday(&now, 0);
         double diff = (now.tv_sec - then_last.tv_sec) +
-			(now.tv_usec - then_last.tv_usec) * 0.000001;
+                (now.tv_usec - then_last.tv_usec) * 0.000001;
         printf("Pass 2, processed %d triples", total);
         if (total > 0) {
-	    printf(", %d triples/s\n", (int)((double)total/diff));
+            printf(", %d triples/s\n", (int)((double)total/diff));
         } else {
-	    printf("\n");
+            printf("\n");
         }
     }
     ftruncate(tfd, 0);
@@ -554,7 +555,7 @@ fs_rid fs_bnode_id(fsp_link *link, raptor_term_blank_value blank)
         if (bnodenext > bnodemax) {
             fsp_bnode_alloc(link, 1000000, &bnodenext, &bnodemax);
             if (sizeof(gpointer) < sizeof(fs_rid) && bnodemax >= 0x100000000LL) {
-                    fs_error(LOG_CRIT, "bNode RID %lld exceeds safe size on 32-bit arch", bnodemax);
+                fs_error(LOG_CRIT, "bNode RID %lld exceeds safe size on 32-bit arch", bnodemax);
                 abort();
             }
         }
@@ -615,7 +616,7 @@ static void buffer_tokens(fs_parse_stuff *data, fs_rid quad[4], const char *str)
             continue;
         }
         gchar *ltok = g_utf8_strdown(tokens[i], strlen(tokens[i]));
-	quad[3] = fs_hash_literal(ltok, fs_c.empty);
+        quad[3] = fs_hash_literal(ltok, fs_c.empty);
         buffer_res(data->link, data->segments, quad[3], ltok, fs_c.empty, data->dryrun);
         g_free(ltok);
         buffer_quad(data, quad);
@@ -691,7 +692,7 @@ static void buffer_stems(fs_parse_stuff *data, fs_rid quad[4], const char *str, 
         gchar *ltok = g_utf8_strdown(tokens[i], strlen(tokens[i]));
         char *symbol = (char *)sb_stemmer_stem(stemmer, (sb_symbol *)ltok, strlen(ltok));
         g_free(ltok);
-	quad[3] = fs_hash_literal(symbol, fs_c.empty);
+        quad[3] = fs_hash_literal(symbol, fs_c.empty);
         buffer_res(data->link, data->segments, quad[3], symbol, fs_c.empty, data->dryrun);
         buffer_quad(data, quad);
     }
@@ -735,7 +736,7 @@ static void store_stmt(void *user_data, raptor_statement *statement)
                     fs_rid_set_add(stem_set, result[0]->data[row]);
                 } else {
                     fs_error(LOG_ERR, "unexpected index type %016llx found in "
-                                      "fulltext indexing config", result[1]->data[row]);
+                             "fulltext indexing config", result[1]->data[row]);
                 }
             }
         }
@@ -747,7 +748,7 @@ static void store_stmt(void *user_data, raptor_statement *statement)
     fs_rid m, s, p, o;
 
     if (statement->graph && strcmp(data->model,
-        (char *)raptor_uri_as_string(statement->graph->value.uri))) {
+                                   (char *)raptor_uri_as_string(statement->graph->value.uri))) {
         if (statement->graph->type == RAPTOR_TERM_TYPE_URI) {
             char *graph = (char *) raptor_uri_as_string(statement->graph->value.uri);
             if (data->model) {
@@ -756,7 +757,7 @@ static void store_stmt(void *user_data, raptor_statement *statement)
             data->model = g_strdup(graph);
             data->model_hash = fs_hash_uri(graph);
             buffer_res(data->link, data->segments, data->model_hash,
-                graph, FS_RID_NULL, data->dryrun);
+                       graph, FS_RID_NULL, data->dryrun);
         } else {
             fs_error(LOG_CRIT, "found non-URI graph ID in quad");
         }
@@ -768,8 +769,8 @@ static void store_stmt(void *user_data, raptor_statement *statement)
         subj = (char *) statement->subject->value.blank.string;
     } else if (statement->subject->type == RAPTOR_TERM_TYPE_URI) {
         subj = (char *) raptor_uri_as_string((raptor_uri *)
-					       statement->subject->value.uri);
-	s = fs_hash_uri(subj);
+                                             statement->subject->value.uri);
+        s = fs_hash_uri(subj);
     } else {
         fs_error(LOG_CRIT, "found non-URI/bNode subject");
 
@@ -787,25 +788,25 @@ static void store_stmt(void *user_data, raptor_statement *statement)
 
     fs_rid attr = fs_c.empty;
     if (statement->object->type == RAPTOR_TERM_TYPE_LITERAL) {
-	obj = (char *) statement->object->value.literal.string;
+        obj = (char *) statement->object->value.literal.string;
         char *langtag = NULL;
-	if (statement->object->value.literal.language) {
-	    langtag = (char *)statement->object->value.literal.language;
+        if (statement->object->value.literal.language) {
+            langtag = (char *)statement->object->value.literal.language;
             for (char *pos = langtag; *pos; pos++) {
                 if (islower(*pos)) {
                     *pos = toupper(*pos);
                 }
             }
-	    attr = fs_hash_literal(langtag, 0);
-	    buffer_res(data->link, data->segments, attr, langtag, fs_c.empty, data->dryrun);
-	} else if (statement->object->value.literal.datatype &&
+            attr = fs_hash_literal(langtag, 0);
+            buffer_res(data->link, data->segments, attr, langtag, fs_c.empty, data->dryrun);
+        } else if (statement->object->value.literal.datatype &&
                    raptor_uri_as_string(statement->object->
                                         value.literal.datatype)) {
-	    char *dt = (char *)raptor_uri_as_string(statement->object->value.literal.datatype);
-	    attr = fs_hash_uri(dt);
-	    buffer_res(data->link, data->segments, attr, dt, FS_RID_NULL, data->dryrun);
-	}
-	o = fs_hash_literal(obj, attr);
+            char *dt = (char *)raptor_uri_as_string(statement->object->value.literal.datatype);
+            attr = fs_hash_uri(dt);
+            buffer_res(data->link, data->segments, attr, dt, FS_RID_NULL, data->dryrun);
+        }
+        o = fs_hash_literal(obj, attr);
         if (fs_rid_set_contains(token_set, p)) {
             fs_rid quad[4] = { m, s, p, FS_RID_NULL };
             buffer_tokens(data, quad, obj);
@@ -819,13 +820,13 @@ static void store_stmt(void *user_data, raptor_statement *statement)
             buffer_stems(data, quad, obj, langtag);
         }
     } else if (statement->object->type == RAPTOR_TERM_TYPE_BLANK) {
-	o = fs_bnode_id(data->link, statement->object->value.blank);
-	obj = (char *) statement->object->value.blank.string;
+        o = fs_bnode_id(data->link, statement->object->value.blank);
+        obj = (char *) statement->object->value.blank.string;
         attr = FS_RID_NULL;
     } else if (statement->object->type == RAPTOR_TERM_TYPE_URI) {
-	obj = (char *) raptor_uri_as_string(statement->object->value.uri);
+        obj = (char *) raptor_uri_as_string(statement->object->value.uri);
         attr = FS_RID_NULL;
-	o = fs_hash_uri(obj);
+        o = fs_hash_uri(obj);
     } else {
         fs_error(LOG_CRIT, "found non-URI/bNode/Literal object");
 
@@ -842,15 +843,15 @@ static void store_stmt(void *user_data, raptor_statement *statement)
     total_triples_parsed++;
 
     if (data->verbosity && total_triples_parsed % 10000 == 0) {
-	printf("Pass 1, processed %d triples\r", total_triples_parsed);
-	fflush(stdout);
+        printf("Pass 1, processed %d triples\r", total_triples_parsed);
+        fflush(stdout);
     }
     if (total_triples_parsed == FS_CHUNK_SIZE) {
-	if (data->verbosity) printf("Pass 1, processed %d triples (%d)\n", FS_CHUNK_SIZE, data->count_trip);
-	*(data->ext_count) += process_quads(data);
-	data->last_count = data->count_trip;
-	total_triples_parsed = 0;
-	gettimeofday(&then_last, 0);
+        if (data->verbosity) printf("Pass 1, processed %d triples (%d)\n", FS_CHUNK_SIZE, data->count_trip);
+        *(data->ext_count) += process_quads(data);
+        data->last_count = data->count_trip;
+        total_triples_parsed = 0;
+        gettimeofday(&then_last, 0);
     }
 }
 

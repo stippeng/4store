@@ -51,3 +51,8 @@ filter_test_SOURCES = filter-test.c filter.c filter-datatypes.c query-data.c dec
 filter_test_LDADD = ../common/lib4sintl.a ../common/libsort.a ../libs/mt19937-64/libmt64.a -lm @MDNS_LIBS@ @RASQAL_LIBS@ @UUID_LIBS@
 
 decimal_test_SOURCES = decimal-test.c decimal.c
+
+lib_LTLIBRARIES = lib4store-fe.la
+lib4store_fe_la_SOURCES = query.c results.c query-data.c query-datatypes.c query-cache.c filter.c filter-datatypes.c order.c group.c optimiser.c decimal.c import.c update.c $(snowball_sources) ../common/st ../common/4s-common.c ../common/4s-client.c ../common/4s-mdns.c ../common/datatypes.c ../common/error.c ../common/umac.c ../common/rijndael-alg-fst.c ../common/md5.c ../common/hash.c  ../common/bit_arr.c
+lib4store_fe_la_CFLAGS = $(AM_CFLAGS)
+lib4store_fe_la_LIBADD = ../common/lib4sintl.a ../libs/stemmer/libstemmer.a ../libs/double-metaphone/libdouble_metaphone.a ../common/libsort.a ../libs/mt19937-64/libmt64.a @GLIB_LIBS@

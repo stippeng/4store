@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     };
 
     for (int i= 0; i < argc; ++i) {
-      model[i] = NULL;
+        model[i] = NULL;
     }
 
     int help_return = 1;
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
         } else if (c == 'a') {
             adding = 1;
         } else if (c == 'c') {
-            fs_set_config_file(optarg); 
+            fs_set_config_file(optarg);
         } else if (c == 'n') {
             dryrun |= FS_DRYRUN_DELETE | FS_DRYRUN_RESOURCES | FS_DRYRUN_QUADS;
         } else if (c == 'R') {
@@ -109,15 +109,15 @@ int main(int argc, char *argv[])
     }
 
     if (verbosity > 0) {
-	if (dryrun & FS_DRYRUN_DELETE) {
-	    printf("warning: not deleting old model\n");
-	}
-	if (dryrun & FS_DRYRUN_RESOURCES) {
-	    printf("warning: not importing resource nodes\n");
-	}
-	if (dryrun & FS_DRYRUN_QUADS) {
-	    printf("warning: not importing quad graph\n");
-	}
+        if (dryrun & FS_DRYRUN_DELETE) {
+            printf("warning: not deleting old model\n");
+        }
+        if (dryrun & FS_DRYRUN_RESOURCES) {
+            printf("warning: not importing resource nodes\n");
+        }
+        if (dryrun & FS_DRYRUN_QUADS) {
+            printf("warning: not importing quad graph\n");
+        }
     }
 
     files = 0;
@@ -125,11 +125,11 @@ int main(int argc, char *argv[])
         if (!kb_name) {
             kb_name = argv[k];
         } else {
-	    if (strchr(argv[k], ':')) {
-		uri[files] = g_strdup(argv[k]);
-	    } else {
-		uri[files] = (char *)raptor_uri_filename_to_uri_string(argv[k]);
-	    }
+            if (strchr(argv[k], ':')) {
+                uri[files] = g_strdup(argv[k]);
+            } else {
+                uri[files] = (char *)raptor_uri_filename_to_uri_string(argv[k]);
+            }
             if (!model[files]) {
                 if (!model_default) {
                     model[files] = uri[files];
@@ -137,8 +137,11 @@ int main(int argc, char *argv[])
                     model[files] = model_default;
                 }
             }
+            fprintf(stderr, "Model: %s\nURI:%s\n", model[files], uri[files]);
+
             files++;
         }
+
     }
 
     raptor_world *rw = raptor_new_world();
@@ -168,8 +171,8 @@ int main(int argc, char *argv[])
     fsplink = fsp_open_link(kb_name, password, FS_OPEN_HINT_RW);
 
     if (!fsplink) {
-      fs_error (LOG_ERR, "couldn't connect to “%s”", kb_name);
-      exit(2);
+        fs_error (LOG_ERR, "couldn't connect to “%s”", kb_name);
+        exit(2);
     }
 
     const char *features = fsp_link_features(fsplink);
@@ -188,9 +191,9 @@ int main(int argc, char *argv[])
     gettimeofday(&then, 0);
 
     if (fsp_start_import_all(fsplink)) {
-	fs_error(LOG_ERR, "aborting import");
+        fs_error(LOG_ERR, "aborting import");
 
-	exit(3);
+        exit(3);
     }
 
     fs_rid_vector *mvec = fs_rid_vector_new(0);
@@ -201,19 +204,19 @@ int main(int argc, char *argv[])
     }
     if (!adding) {
         if (verbosity) {
-	    printf("removing old data\n");
-	    fflush(stdout);
+            printf("removing old data\n");
+            fflush(stdout);
         }
         if (!(dryrun & FS_DRYRUN_DELETE)) {
-	    if (fsp_delete_model_all(fsplink, mvec)) {
-	        fs_error(LOG_ERR, "model delete failed");
-	        return 1;
-	    }
-	    for (int i=0; i<mvec->length; i++) {
-		if (mvec->data[i] == fs_c.system_config) {
-		    fs_import_reread_config();
-		}
-	    }
+            if (fsp_delete_model_all(fsplink, mvec)) {
+                fs_error(LOG_ERR, "model delete failed");
+                return 1;
+            }
+            for (int i=0; i<mvec->length; i++) {
+                if (mvec->data[i] == fs_c.system_config) {
+                    fs_import_reread_config();
+                }
+            }
         }
         fsp_new_model_all(fsplink, mvec);
     }
@@ -222,24 +225,26 @@ int main(int argc, char *argv[])
 
     gettimeofday(&then_last, 0);
     for (int f = 0; f < files; ++f) {
-	if (verbosity) {
+        if (verbosity) {
             printf("Reading <%s>\n", uri[f]);
             if (strcmp(uri[f], model[f])) {
                 printf("   into <%s>\n", model[f]);
             }
-	    fflush(stdout);
+            printf("Format is <%s>\n", format);
+
+            fflush(stdout);
         }
 
         fs_import(fsplink, model[f], uri[f], format, verbosity, dryrun, has_o_index, msg, &total_triples);
-	if (verbosity) {
-	    fflush(stdout);
+        if (verbosity) {
+            fflush(stdout);
         }
     }
     double sthen = fs_time();
     int ret = fs_import_commit(fsplink, verbosity, dryrun, has_o_index, msg, &total_triples);
 
     if (verbosity > 0) {
-	printf("Updating index\n");
+        printf("Updating index\n");
         fflush(stdout);
     }
     fsp_stop_import_all(fsplink);
@@ -250,10 +255,10 @@ int main(int argc, char *argv[])
     if (!ret) {
         gettimeofday(&now, 0);
         double diff = (now.tv_sec - then.tv_sec) +
-                        (now.tv_usec - then.tv_usec) * 0.000001;
+                (now.tv_usec - then.tv_usec) * 0.000001;
         if (verbosity && total_triples > 0) {
-	    printf("Imported %d triples, average %d triples/s\n", total_triples,
-		     (int)((double)total_triples/diff));
+            printf("Imported %d triples, average %d triples/s\n", total_triples,
+                   (int)((double)total_triples/diff));
             fflush(stdout);
         }
     }
@@ -266,15 +271,15 @@ int main(int argc, char *argv[])
             fs_import_timing newtimes;
             fsp_get_import_times(fsplink, seg, &newtimes);
 
-	    printf("%2d: %f\t%f\t%f\t%f\t%f\t%f\t%f\n", seg,
+            printf("%2d: %f\t%f\t%f\t%f\t%f\t%f\t%f\n", seg,
                    newtimes.add_s - timing[seg].add_s,
-	           newtimes.add_r - timing[seg].add_r,
-	           newtimes.commit_q - timing[seg].commit_q,
+                   newtimes.add_r - timing[seg].add_r,
+                   newtimes.commit_q - timing[seg].commit_q,
                    newtimes.commit_r - timing[seg].commit_r,
                    newtimes.remove - timing[seg].remove,
-		   newtimes.rebuild - timing[seg].rebuild,
-		   tics[seg] * 0.001);
-	}
+                   newtimes.rebuild - timing[seg].rebuild,
+                   tics[seg] * 0.001);
+        }
     }
 
     fsp_close_link(fsplink);
