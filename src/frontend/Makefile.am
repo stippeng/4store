@@ -4,8 +4,10 @@ noinst_PROGRAMS = filter-test decimal-test 4s-bind 4s-reverse-bind 4s-resolve 4s
 
 noinst_HEADERS = debug.h decimal.h filter-datatypes.h filter.h import.h optimiser.h order.h query-cache.h query-data.h query-datatypes.h query-intl.h query.h results.h update.h group.h
 
+nodist_pkginclude_HEADERS = update.h
+
 # PROFILE = -pg
-AM_CFLAGS = -std=gnu99 -fno-strict-aliasing -Wall $(PROFILE) -g -O2 -I./ -I../ -DGIT_REV=@GIT_REV@ @GLIB_CFLAGS@ @RAPTOR_CFLAGS@ @RASQAL_CFLAGS@ @LIBXML_CFLAGS@ `pcre-config --cflags`
+AM_CFLAGS = -std=gnu99 -fno-strict-aliasing -Wall $(PROFILE) -g -O2 -I./ -I../ -DFS_BIN_DIR=\"$(bindir)\" -DGIT_REV=@GIT_REV@ @GLIB_CFLAGS@ @RAPTOR_CFLAGS@ @RASQAL_CFLAGS@ @LIBXML_CFLAGS@ `pcre-config --cflags`
 LIBS = $(PROFILE) -lncurses -lreadline @GLIB_LIBS@ `pcre-config --libs`
 
 test: all filter-test
@@ -53,6 +55,6 @@ filter_test_LDADD = ../common/lib4sintl.a ../common/libsort.a ../libs/mt19937-64
 decimal_test_SOURCES = decimal-test.c decimal.c
 
 lib_LTLIBRARIES = lib4store-fe.la
-lib4store_fe_la_SOURCES = query.c results.c query-data.c query-datatypes.c query-cache.c filter.c filter-datatypes.c order.c group.c optimiser.c decimal.c import.c update.c $(snowball_sources) ../common/st ../common/4s-common.c ../common/4s-client.c ../common/4s-mdns.c ../common/datatypes.c ../common/error.c ../common/umac.c ../common/rijndael-alg-fst.c ../common/md5.c ../common/hash.c  ../common/bit_arr.c
+lib4store_fe_la_SOURCES = query.c results.c query-data.c query-datatypes.c query-cache.c filter.c filter-datatypes.c order.c group.c optimiser.c decimal.c import.c update.c $(snowball_sources) ../common/st ../common/4s-common.c ../common/4s-client.c ../common/4s-mdns.c ../common/datatypes.c ../common/error.c ../common/umac.c ../common/rijndael-alg-fst.c ../common/md5.c ../common/hash.c  ../common/bit_arr.c ../common/msort.c ../common/qsort.c ../admin/admin_common.c ../admin/admin_protocol.c ../admin/admin_frontend.c
 lib4store_fe_la_CFLAGS = $(AM_CFLAGS)
-lib4store_fe_la_LIBADD = ../common/lib4sintl.a ../libs/stemmer/libstemmer.a ../libs/double-metaphone/libdouble_metaphone.a ../common/libsort.a ../libs/mt19937-64/libmt64.a @GLIB_LIBS@
+lib4store_fe_la_LIBADD = ../libs/stemmer/libstemmer.la ../libs/double-metaphone/libdouble_metaphone.la ../libs/mt19937-64/libmt64.la @GLIB_LIBS@

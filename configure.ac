@@ -221,7 +221,8 @@ AC_CONFIG_FILES([Makefile
                  src/libs/mt19937-64/Makefile
                  src/utilities/Makefile
                  src/common/params.h
-                 4store-0.pc])
+                 4store-0.pc
+                 4store-fe-0.pc])
 AC_OUTPUT
 
 raptor_version=`$PKG_CONFIG raptor2 --modversion 2>/dev/null`

@@ -1,6 +1,6 @@
-noinst_LIBRARIES = libmt64.a
+noinst_LTLIBRARIES = libmt64.la
 
 noinst_HEADERS = mt64.h
 
-libmt64_a_SOURCES = mt19937-64.c
+libmt64_la_SOURCES = mt19937-64.c
 
